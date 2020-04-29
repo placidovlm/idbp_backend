@@ -33,10 +33,10 @@ router.post
             .input("datahora_pedido", sql.DateTime2, Date())
             .input("autorizacao_ligacao", sql.Bit, req.body.autorizacao_ligacao)
             .input("pedido_oracao", sql.Text, req.body.pedido_oracao)  
-            .input("oracao_respondida", sql.Bit, req.body.oracao_respondida)
+            .input("oracao_respondida", sql.Bit, 0)
             .input("area_oracao", sql.VarChar(40), req.body.area_oracao)  
             .input("email_solicitante", sql.VarChar(40), req.body.email_solicitante)  
-            .input("oracao_publica", sql.Bit, 0) 
+            .input("oracao_publica", sql.Bit, req.body.oracao_publica) 
             .query('INSERT INTO TB_ORACAO (igreja_destino, nome_solicitante, telefone_solicitante,datahora_pedido,autorizacao_ligacao,pedido_oracao,oracao_respondida,area_oracao, email_solicitante, oracao_publica)' 
                 + ' VALUES (@igreja_destino, @nome_solicitante, @telefone_solicitante, @datahora_pedido, @autorizacao_ligacao, @pedido_oracao, @oracao_respondida, @area_oracao, @email_solicitante, @oracao_publica);')
 
@@ -50,12 +50,14 @@ router.post
         } catch (err) {
             // ... error checks
             console.log(err);
+            return res.status(404).json({"error":err}) 
         }
     })()
 
     sql.on('error', err => {
         // ... error handler
         console.log(err);
+        return res.status(404).json({"error":err}) 
     })
 
 });
